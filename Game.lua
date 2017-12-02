@@ -1,5 +1,7 @@
 local Camera = require("Camera")
-local Wormhead = require("Wormhead")
+local Mine = require("Mine")
+local Physics = require("Physics")
+local WormHead = require("WormHead")
 
 local Game = {}
 Game.__index = Game
@@ -9,12 +11,14 @@ function Game.new()
     game.camera = Camera.new({scale = 1 / 32})
     game.resources = {}
     game.resources.images = {}
+    game.resources.images.mine = love.graphics.newImage("resources/images/mine.png")
     game.resources.images.wormhead = love.graphics.newImage("resources/images/wormhead.png")
     game.updates = {}
     game.draws = {}
     game.texelScale = 1 / 16
-    game.world = love.physics.newWorld(0, 0.1)
-    Wormhead.new(game)
+    game.physics = Physics.new()
+    WormHead.new(game)
+    Mine.new(game)
     return game
 end
 
@@ -23,7 +27,7 @@ function Game:update(dt)
         func(obj, dt)
     end
 
-    self.world:update(dt)
+    self.physics:update(dt)
 end
 
 function Game:draw()

@@ -1,38 +1,39 @@
 local Sprite = require("Sprite")
 local Turner = require("Turner")
 
-local Wormhead = {}
-Wormhead.__index = Wormhead
+local WormHead = {}
+WormHead.__index = WormHead
 
-function Wormhead.new(game, config)
-    local wormhead = setmetatable({}, Wormhead)
-    wormhead.game = assert(game)
-    wormhead.game.updates[wormhead] = Wormhead.update
-    wormhead.game.draws[wormhead] = Wormhead.draw
+function WormHead.new(game, config)
+    local head = setmetatable({}, WormHead)
+    head.game = assert(game)
+    head.game.updates[head] = WormHead.update
+    head.game.draws[head] = WormHead.draw
     config = config or {}
+    local world = assert(head.game.physics.world)
     local x = config.x or 0
     local y = config.y or 0
     local angle = config.angle or 0
-    wormhead.body = love.physics.newBody(wormhead.game.world, x, y, "dynamic")
-    wormhead.body:setAngle(angle)
+    head.body = love.physics.newBody(world, x, y, "dynamic")
+    head.body:setAngle(angle)
     local shape = love.physics.newCircleShape(0.5)
-    wormhead.fixture = love.physics.newFixture(wormhead.body, shape)
-    wormhead.turner = Turner.new(wormhead, {maxTorque = 16})
-    wormhead.sprite = Sprite.new(game, game.resources.images.wormhead)
-    wormhead.maxTurnSpeed = 2 * math.pi
-    wormhead.maxThrustForce = 8
-    return wormhead
+    head.fixture = love.physics.newFixture(head.body, shape)
+    head.turner = Turner.new(head, {maxTorque = 16})
+    head.sprite = Sprite.new(game, game.resources.images.wormhead)
+    head.maxTurnSpeed = 2 * math.pi
+    head.maxThrustForce = 8
+    return head
 end
 
-function Wormhead:destroy()
+function WormHead:destroy()
     self.turner:destroy()
     self.fixture:destroy()
     self.body:destroy()
     self.game.draws[self] = nil
-    wormhead.game.updates[wormhead] = nil
+    head.game.updates[head] = nil
 end
 
-function Wormhead:update(dt)
+function WormHead:update(dt)
     local leftInput = love.keyboard.isDown("a")
     local rightInput = love.keyboard.isDown("d")
     local upInput = love.keyboard.isDown("w")
@@ -46,10 +47,10 @@ function Wormhead:update(dt)
     self.body:applyForce(thrustForce * forwardX, thrustForce * forwardY)
 end
 
-function Wormhead:draw()
+function WormHead:draw()
     self.sprite.x, self.sprite.y = self.body:getPosition()
     self.sprite.angle = self.body:getAngle()
     self.sprite:draw()
 end
 
-return Wormhead
+return WormHead
