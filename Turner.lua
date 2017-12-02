@@ -5,9 +5,8 @@ function Turner.new(vehicle, config)
     local turner = setmetatable({}, Turner)
     turner.vehicle = assert(vehicle)
     local world = turner.vehicle.body:getWorld()
-    local x, y = turner.vehicle.body:getPosition()
-    turner.body = love.physics.newBody(world, x, y, "kinematic")
-    turner.joint = love.physics.newFrictionJoint(turner.body, turner.vehicle.body, x, y)
+    turner.body = love.physics.newBody(world, 0, 0, "kinematic")
+    turner.joint = love.physics.newFrictionJoint(turner.vehicle.body, turner.body, 0, 0)
     config = config or {}
     maxTorque = config.maxTorque or 0
     turner.joint:setMaxTorque(maxTorque)

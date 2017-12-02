@@ -1,6 +1,8 @@
 local Game = require("Game")
 
 function love.load()
+    love.window.setTitle("Wormhead")
+
     love.window.setMode(800, 600, {
         fullscreentype = "desktop",
         highdpi = true,
