@@ -1,4 +1,5 @@
 local Sprite = require("Sprite")
+local utils = require("utils")
 
 local Jammer = {}
 Jammer.__index = Jammer
@@ -7,6 +8,8 @@ Jammer.entityType = "jammer"
 function Jammer.new(game, config)
     local jammer = setmetatable({}, Jammer)
     jammer.game = assert(game)
+    jammer.game.entities.jammer[jammer] = true
+    jammer.game.updateHandlers[jammer] = jammer.update
     jammer.game.animateHandlers[jammer] = jammer.animate
     jammer.game.drawHandlers[jammer] = jammer.draw
     local world = assert(jammer.game.physics.world)
@@ -45,6 +48,17 @@ function Jammer:destroy()
     self.body:destroy()
     self.game.drawHandlers[self] = nil
     self.game.animateHandlers[self] = nil
+    self.game.updateHandlers[self] = nil
+    self.game.entities.jammer[self] = nil
+end
+
+function Jammer:update(dt)
+    local x, y = self.body:getPosition()
+
+    if utils.distance2(x, y, self.game.camera.x, self.game.camera.y) > self.game.despawnDistance then
+        self:destroy()
+        return
+    end
 end
 
 function Jammer:animate(dt)

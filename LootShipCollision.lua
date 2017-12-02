@@ -17,7 +17,7 @@ function LootShipCollision:destroy()
 end
 
 function LootShipCollision:collide(dt)
-    if self.loot.headEdge then
+    if self.loot.destroyed or self.loot.headEdge then
         self:destroy()
         return
     end

@@ -1,17 +1,13 @@
 local Camera = require("Camera")
-local Explosion = require("Explosion")
-local Jammer = require("Jammer")
-local Mine = require("Mine")
 local Physics = require("Physics")
-local Ship = require("Ship")
-local WormEdge = require("WormEdge")
+local Level = require("Level")
 
 local Game = {}
 Game.__index = Game
 
 function Game.new()
     local game = setmetatable({}, Game)
-    game.camera = Camera.new({scale = 1 / 32})
+    game.camera = Camera.new({scale = 1 / 64})
     game.resources = {}
     game.resources.images = {}
     game.resources.images.armedMine = love.graphics.newImage("resources/images/armed-mine.png")
@@ -24,11 +20,15 @@ function Game.new()
     game.collideHandlers = {}
     game.animateHandlers = {}
     game.drawHandlers = {}
+    game.entities = {}
+    game.entities.jammer = {}
+    game.entities.mine = {}
+    game.entities.ship = {}
     game.texelScale = 1 / 16
+    game.spawnDistance = 32
+    game.despawnDistance = 64
     game.physics = Physics.new()
-    local ship = Ship.new(game)
-    local jammer = Jammer.new(game, {x = -8})
-    local mine = Mine.new(game, {x = 8})
+    Level.new(game)
     return game
 end
 
@@ -73,7 +73,13 @@ function Game:drawParallaxStars(parallaxScale, scaleX, scaleY)
         for tileY = tileY1, tileY2 do
             local x = 16 * tileX + parallaxScale * self.camera.x
             local y = 16 * tileY + parallaxScale * self.camera.y
-            love.graphics.draw(self.resources.images.stars, x, y, 0, scaleX * self.texelScale, scaleY * self.texelScale, 128, 128)
+
+            love.graphics.draw(
+                self.resources.images.stars,
+                x, y,
+                0,
+                scaleX * self.texelScale, scaleY * self.texelScale,
+                128, 128)
         end
     end
 

@@ -1,5 +1,6 @@
 local Explosion = require("Explosion")
 local Sprite = require("Sprite")
+local utils = require("utils")
 
 local Mine = {}
 Mine.__index = Mine
@@ -8,6 +9,7 @@ Mine.entityType = "mine"
 function Mine.new(game, config)
     local mine = setmetatable({}, Mine)
     mine.game = assert(game)
+    mine.game.entities.mine[mine] = true
     mine.game.updateHandlers[mine] = mine.update
     mine.game.animateHandlers[mine] = mine.animate
     mine.game.drawHandlers[mine] = mine.draw
@@ -39,19 +41,38 @@ function Mine.new(game, config)
     mine.sprite = Sprite.new(game, game.resources.images.disarmedMine)
     mine.state = "armed"
     mine.blinkTime = 2 * math.pi * love.math.random()
+    mine.destroyed = false
     return mine
 end
 
 function Mine:destroy()
+    self.destroyed = true
+
+    if self.tailEdge then
+        self.tailEdge:destroy()
+    end
+
+    if self.headEdge then
+        self.headEdge:destroy()
+    end
+
     self.sensorFixture:destroy()
     self.fixture:destroy()
     self.body:destroy()
     self.game.drawHandlers[self] = nil
     self.game.animateHandlers[self] = nil
     self.game.updateHandlers[self] = nil
+    self.game.entities.mine[self] = nil
 end
 
 function Mine:update(dt)
+    local x, y = self.body:getPosition()
+
+    if utils.distance2(x, y, self.game.camera.x, self.game.camera.y) > self.game.despawnDistance then
+        self:destroy()
+        return
+    end
+
     local jammingSignalCount = 0
     local targetCount = 0
 

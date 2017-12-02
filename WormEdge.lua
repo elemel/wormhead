@@ -21,6 +21,8 @@ function WormEdge.new(tail, head)
 
     edge.joint:setLimitsEnabled(true)
     edge.joint:setLimits(-0.375 * math.pi, 0.375 * math.pi)
+    edge.tail.groupIndex = edge.head.groupIndex
+    edge.tail.fixture:setGroupIndex(-edge.tail.groupIndex)
     return edge
 end
 

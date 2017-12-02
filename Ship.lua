@@ -8,9 +8,11 @@ Ship.entityType = "ship"
 function Ship.new(game, config)
     local ship = setmetatable({}, Ship)
     ship.game = assert(game)
+    ship.game.entities.ship[ship] = true
     ship.game.updateHandlers[ship] = ship.update
     ship.game.animateHandlers[ship] = ship.animate
     ship.game.drawHandlers[ship] = ship.draw
+    ship.groupIndex = ship.game.physics:generateGroupIndex()
     config = config or {}
     local world = assert(ship.game.physics.world)
     local x = config.x or 0
@@ -19,7 +21,8 @@ function Ship.new(game, config)
     ship.body = love.physics.newBody(world, x, y, "dynamic")
     ship.body:setAngle(angle)
     local shape = love.physics.newCircleShape(0.5)
-    ship.fixture = love.physics.newFixture(ship.body, shape, 4)
+    ship.fixture = love.physics.newFixture(ship.body, shape, 8)
+    ship.fixture:setGroupIndex(-ship.groupIndex)
 
     ship.fixture:setUserData({
         entity = ship,
@@ -29,17 +32,20 @@ function Ship.new(game, config)
     ship.turner = Turner.new(ship, {maxTorque = 16})
     ship.sprite = Sprite.new(game, game.resources.images.wormhead)
     ship.maxTurnSpeed = 2 * math.pi
-    ship.maxThrustForce = 32
+    ship.maxThrustForce = 64
+    ship.destroyed = false
     return ship
 end
 
 function Ship:destroy()
+    self.destroyed = true
     self.turner:destroy()
     self.fixture:destroy()
     self.body:destroy()
     self.game.drawHandlers[self] = nil
     self.game.animateHandlers[self] = nil
     self.game.updateHandlers[self] = nil
+    self.game.entities.ship[self] = nil
 end
 
 function Ship:update(dt)

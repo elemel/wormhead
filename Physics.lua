@@ -36,6 +36,7 @@ function Physics.new()
     end
 
     physics.world:setCallbacks(beginContact, nil, nil, nil)
+    physics.nextGroupIndex = 1
     return physics
 end
 
@@ -58,6 +59,12 @@ function Physics:draw()
             end
         end
     end
+end
+
+function Physics:generateGroupIndex()
+    local groupIndex = self.nextGroupIndex
+    self.nextGroupIndex = self.nextGroupIndex + 1
+    return groupIndex
 end
 
 return Physics
