@@ -1,3 +1,4 @@
+local Explosion = require("Explosion")
 local Sprite = require("Sprite")
 
 local Mine = {}
@@ -64,11 +65,17 @@ function Mine:update(dt)
                 direction = -1
             end
 
-            if fixtureA == self.fixture then
-                local userData = assert(fixtureB:getUserData())
+            local userData = assert(fixtureB:getUserData())
 
+            if fixtureA == self.fixture then
                 if userData.userType == "jammingSignal" then
                     jammingSignalCount = jammingSignalCount + 1
+                end
+            end
+
+            if fixtureA == self.sensorFixture then
+                if userData.userType == "ship" then
+                    targetCount = targetCount + 1
                 end
             end
         end
@@ -86,6 +93,12 @@ function Mine:update(dt)
         self.state = "armed"
     else
         self.state = "disarmed"
+    end
+
+    if self.state == "armed" and targetCount >= 1 then
+        local x, y = self.body:getPosition()
+        Explosion.new(self.game, {x = x, y = y})
+        self:destroy()
     end
 end
 

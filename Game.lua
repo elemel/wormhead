@@ -1,4 +1,5 @@
 local Camera = require("Camera")
+local Explosion = require("Explosion")
 local Jammer = require("Jammer")
 local Mine = require("Mine")
 local Physics = require("Physics")
@@ -16,6 +17,7 @@ function Game.new()
     game.resources.images.armedMine = love.graphics.newImage("resources/images/armed-mine.png")
     game.resources.images.disarmedMine = love.graphics.newImage("resources/images/disarmed-mine.png")
     game.resources.images.jammer = love.graphics.newImage("resources/images/jammer.png")
+    game.resources.images.pixel = love.graphics.newImage("resources/images/pixel.png")
     game.resources.images.stars = love.graphics.newImage("resources/images/stars.png")
     game.resources.images.wormhead = love.graphics.newImage("resources/images/wormhead.png")
     game.updateHandlers = {}
