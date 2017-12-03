@@ -21,12 +21,13 @@ function Game.new()
     game.animateHandlers = {}
     game.drawHandlers = {}
     game.entities = {}
+    game.entities.asteroid = {}
     game.entities.jammer = {}
     game.entities.mine = {}
     game.entities.ship = {}
     game.texelScale = 1 / 16
-    game.spawnDistance = 32
-    game.despawnDistance = 64
+    game.spawnDistance = 64
+    game.despawnDistance = 128
     game.physics = Physics.new()
     Level.new(game)
     return game
@@ -56,11 +57,13 @@ function Game:draw()
     love.graphics.scale(scale)
     love.graphics.setLineWidth(1 / scale)
     love.graphics.translate(-self.camera.x, -self.camera.y)
-    self:drawParallaxStars(1 / 2, 1, 1)
+    self:drawParallaxStars(0.5, 1, 1)
 
     for entity, handler in pairs(self.drawHandlers) do
         handler(entity)
     end
+
+    -- self.physics:draw()
 end
 
 function Game:drawParallaxStars(parallaxScale, scaleX, scaleY)

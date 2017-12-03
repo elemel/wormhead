@@ -54,6 +54,8 @@ function Physics:draw()
                 local x, y = body:getWorldPoint(shape:getPoint())
                 local radius = shape:getRadius()
                 love.graphics.circle("line", x, y, radius, 16)
+            elseif shapeType == "polygon" then
+                love.graphics.polygon("line", body:getWorldPoints(shape:getPoints()))
             else
                 print(shapeType)
             end

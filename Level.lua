@@ -1,3 +1,4 @@
+local Asteroid = require("Asteroid")
 local Jammer = require("Jammer")
 local Mine = require("Mine")
 local Ship = require("Ship")
@@ -12,8 +13,11 @@ function Level.new(game, config)
     level.game.updateHandlers[level] = level.update
     config = config or {}
     level.maxJammerCount = config.maxJammerCount or 4
-    level.maxMineCount = config.maxMineCount or 32
-    level.maxAngularVelocity = config.maxAngularVelocity or math.pi
+    level.maxMineCount = config.maxMineCount or 16
+    level.maxAsteroidCount = config.maxAsteroidCount or 8
+    level.minAsteroidRadius = config.minAsteroidRadius or 8
+    level.maxAsteroidRadius = config.maxAsteroidRadius or 16
+    level.maxAngularVelocity = config.maxAngularVelocity or 0.125 * math.pi
     level.maxLinearVelocity = config.maxLinearVelocity or 1
     return level
 end
@@ -65,6 +69,26 @@ function Level:update(dt)
             linearVelocityX = linearVelocityX,
             linearVelocityY = linearVelocityY,
             angularVelocity = angularVelocity,
+        })
+    end
+
+    if utils.count(self.game.entities.asteroid) < self.maxAsteroidCount then
+        local x, y = self:generateSpawnPosition()
+        local angle = utils.generateAngle()
+        local linearVelocityX, linearVelocityY = self:generateLinearVelocity()
+        local angularVelocity = self:generateAngularVelocity()
+        local scaleX = utils.mix(self.minAsteroidRadius, self.maxAsteroidRadius, love.math.random())
+        local scaleY = utils.mix(self.minAsteroidRadius, self.maxAsteroidRadius, love.math.random())
+        local vertices = utils.generatePolygon(8, 0, 0, scaleX, scaleY, 0.75)
+
+        Asteroid.new(self.game, {
+            x = x,
+            y = y,
+            angle = angle,
+            linearVelocityX = linearVelocityX,
+            linearVelocityY = linearVelocityY,
+            angularVelocity = angularVelocity,
+            vertices = vertices,
         })
     end
 end

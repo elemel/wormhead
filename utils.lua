@@ -32,4 +32,26 @@ function utils.count(t)
     return count
 end
 
+function utils.generatePolygon(vertexCount, x, y, scaleX, scaleY, irregularity, random)
+    vertexCount = vertexCount or 8
+    x = x or 0
+    y = y or 0
+    scaleX = scaleX or 1
+    scaleY = scaleY or 1
+    irregularity = irregularity or 0.5
+    random = random or love.math.random
+    local seed = random()
+    local vertices = {}
+
+    for i = 1, vertexCount do
+        local angle = 2 * math.pi * (seed + i + irregularity * random()) / vertexCount
+        local vertexX = x + scaleX * math.cos(angle)
+        local vertexY = y + scaleY * math.sin(angle)
+        table.insert(vertices, vertexX)
+        table.insert(vertices, vertexY)
+    end
+
+    return vertices
+end
+
 return utils
