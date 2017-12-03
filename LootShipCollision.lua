@@ -22,13 +22,7 @@ function LootShipCollision:collide(dt)
         return
     end
 
-    local tail = self.ship
-
-    while tail.tailEdge do
-        tail = tail.tailEdge.tail
-    end
-
-    WormEdge.new(self.loot, tail)
+    WormEdge.new(self.loot, self.ship)
     self:destroy()
 end
 

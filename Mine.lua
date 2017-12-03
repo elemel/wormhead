@@ -48,12 +48,8 @@ end
 function Mine:destroy()
     self.destroyed = true
 
-    if self.tailEdge then
-        self.tailEdge:destroy()
-    end
-
     if self.headEdge then
-        self.headEdge:destroy()
+        self.headEdge:destroyTail()
     end
 
     self.sensorFixture:destroy()
@@ -102,12 +98,24 @@ function Mine:update(dt)
         end
     end
 
-    if self.headEdge and self.headEdge.head.entityType == "jammer" then
-        jammingSignalCount = jammingSignalCount + 1
+    if self.headEdge then
+        if self.headEdge.head.entityType == "jammer" then
+            jammingSignalCount = jammingSignalCount + 1
+        end
+
+        if self.headEdge.head.entityType == "ship" then
+            targetCount = targetCount + 1
+        end
     end
 
-    if self.tailEdge and self.tailEdge.tail.entityType == "jammer" then
-        jammingSignalCount = jammingSignalCount + 1
+    if self.tailEdge then
+        if self.tailEdge.tail.entityType == "jammer" then
+            jammingSignalCount = jammingSignalCount + 1
+        end
+
+        if self.tailEdge.tail.entityType == "ship" then
+            targetCount = targetCount + 1
+        end
     end
 
     if jammingSignalCount == 0 then
