@@ -76,6 +76,7 @@ function Mine:update(dt)
 
     local jammingSignalCount = 0
     local targetCount = 0
+    local targets = {}
 
     for i, contact in ipairs(self.body:getContactList()) do
         if contact:isTouching() then
@@ -98,6 +99,7 @@ function Mine:update(dt)
             if fixtureA == self.sensorFixture then
                 if userData.userType == "ship" then
                     targetCount = targetCount + 1
+                    targets[userData.entity] = true
                 end
             end
         end
@@ -111,7 +113,25 @@ function Mine:update(dt)
 
     if self.state == "armed" and targetCount >= 1 then
         local x, y = self.body:getPosition()
-        Explosion.new(self.game, {x = x, y = y})
+
+        Explosion.new(self.game, {
+            x = x,
+            y = y,
+        })
+
+        for target, _ in pairs(targets) do
+            if not target.destroyed then
+                local targetX, targetY = target.body:getPosition()
+
+                Explosion.new(self.game, {
+                    x = targetX,
+                    y = targetY,
+                })
+
+                target:destroy()
+            end
+        end
+
         self:destroy()
     end
 end

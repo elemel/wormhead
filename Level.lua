@@ -26,6 +26,7 @@ function Level.new(game, config)
     level.turretProbability = config.turretProbability or 0.25
     level.highscoreLabel = Label.new(level.game.fontCache)
     level.highscore = 0
+    level.shipSpawnDelay = 0
     return level
 end
 
@@ -36,17 +37,21 @@ function Level:destroy()
 end
 
 function Level:update(dt)
-    if not next(self.game.entities.ship) then
+    self.shipSpawnDelay = self.shipSpawnDelay - dt
+
+    if self.shipSpawnDelay < 0 and not next(self.game.entities.ship) then
         local angle = utils.generateAngle()
         local linearVelocityX, linearVelocityY = self:generateLinearVelocity()
         local angularVelocity = self:generateAngularVelocity()
 
-        Ship.new(self.game, {
+        local ship = Ship.new(self.game, {
             angle = angle,
             linearVelocityX = linearVelocityX,
             linearVelocityY = linearVelocityY,
             angularVelocity = angularVelocity,
         })
+
+        ship.level = self
     end
 
     if utils.count(self.game.entities.jammer) < self.maxJammerCount then

@@ -1,3 +1,4 @@
+local BulletTargetCollision = require("BulletTargetCollision")
 local LootShipCollision = require("LootShipCollision")
 
 local Physics = {}
@@ -25,6 +26,14 @@ function Physics.new()
 
         local entity1 = assert(userData1.entity)
         local entity2 = assert(userData2.entity)
+
+        if userType1 == "bullet" and userType2 == "ship" then
+            BulletTargetCollision.new(entity1, entity2)
+        end
+
+        if userType1 == "bullet" and userType2 == "turret" then
+            BulletTargetCollision.new(entity1, entity2)
+        end
 
         if userType1 == "mine" and userType2 == "ship" then
             LootShipCollision.new(entity1, entity2)

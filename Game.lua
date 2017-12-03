@@ -31,6 +31,7 @@ function Game.new()
     game.drawHudHandlers = {}
     game.entities = {}
     game.entities.asteroid = {}
+    game.entities.bullet = {}
     game.entities.jammer = {}
     game.entities.mine = {}
     game.entities.ship = {}
