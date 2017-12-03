@@ -21,7 +21,7 @@ function Ship.new(game, config)
     ship.body = love.physics.newBody(world, x, y, "dynamic")
     ship.body:setAngle(angle)
     local shape = love.physics.newCircleShape(0.5)
-    ship.fixture = love.physics.newFixture(ship.body, shape, 8)
+    ship.fixture = love.physics.newFixture(ship.body, shape, 16)
     ship.fixture:setGroupIndex(-ship.groupIndex)
 
     ship.fixture:setUserData({
@@ -29,10 +29,10 @@ function Ship.new(game, config)
         userType = "ship",
     })
 
-    ship.turner = Turner.new(ship, {maxTorque = 16})
+    ship.turner = Turner.new(ship, {maxTorque = 128})
     ship.sprite = Sprite.new(game, game.resources.images.wormhead)
     ship.maxTurnSpeed = 2 * math.pi
-    ship.maxThrustForce = 64
+    ship.maxThrustForce = 128
     ship.destroyed = false
     return ship
 end

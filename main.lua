@@ -9,6 +9,7 @@ function love.load()
         resizable = true,
     })
 
+    love.mouse.setVisible(false)
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.physics.setMeter(1)
     game = Game.new()
