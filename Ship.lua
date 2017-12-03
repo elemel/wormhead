@@ -20,6 +20,11 @@ function Ship.new(game, config)
     local angle = config.angle or 0
     ship.body = love.physics.newBody(world, x, y, "dynamic")
     ship.body:setAngle(angle)
+    local linearVelocityX = config.linearVelocityX or 0
+    local linearVelocityY = config.linearVelocityY or 0
+    ship.body:setLinearVelocity(linearVelocityX, linearVelocityY)
+    local angularVelocity = config.angularVelocity or 0
+    ship.body:setAngularVelocity(angularVelocity)
     local shape = love.physics.newCircleShape(0.5)
     ship.fixture = love.physics.newFixture(ship.body, shape, 16)
     ship.fixture:setGroupIndex(-ship.groupIndex)

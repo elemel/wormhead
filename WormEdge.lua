@@ -22,7 +22,7 @@ function WormEdge.new(tail, head)
     local angle1 = tail.body:getAngle()
     local angle2 = head.body:getAngle()
     local referenceAngle = 2 * math.pi * math.floor((angle2 - angle1) / (2 * math.pi) + 0.5)
-    edge.joint = love.physics.newRevoluteJoint(tail.body, head.body, x1, y1, x2, y2, false, referenceAngle)
+    edge.joint = love.physics.newRevoluteJoint(tail.body, head.body, x1, y1, x2, y2, true, referenceAngle)
 
     edge.joint:setUserData({
         entity = edge,

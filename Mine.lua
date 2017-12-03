@@ -20,6 +20,11 @@ function Mine.new(game, config)
     local angle = config.angle or 0
     mine.body = love.physics.newBody(world, x, y, "dynamic")
     mine.body:setAngle(angle)
+    local linearVelocityX = config.linearVelocityX or 0
+    local linearVelocityY = config.linearVelocityY or 0
+    mine.body:setLinearVelocity(linearVelocityX, linearVelocityY)
+    local angularVelocity = config.angularVelocity or 0
+    mine.body:setAngularVelocity(angularVelocity)
     local shape = love.physics.newCircleShape(0.5)
     mine.fixture = love.physics.newFixture(mine.body, shape)
 
@@ -95,26 +100,6 @@ function Mine:update(dt)
                     targetCount = targetCount + 1
                 end
             end
-        end
-    end
-
-    if self.headEdge then
-        if self.headEdge.head.entityType == "jammer" then
-            jammingSignalCount = jammingSignalCount + 1
-        end
-
-        if self.headEdge.head.entityType == "ship" then
-            targetCount = targetCount + 1
-        end
-    end
-
-    if self.tailEdge then
-        if self.tailEdge.tail.entityType == "jammer" then
-            jammingSignalCount = jammingSignalCount + 1
-        end
-
-        if self.tailEdge.tail.entityType == "ship" then
-            targetCount = targetCount + 1
         end
     end
 

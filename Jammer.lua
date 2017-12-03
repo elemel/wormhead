@@ -19,6 +19,11 @@ function Jammer.new(game, config)
     local angle = config.angle or 0
     jammer.body = love.physics.newBody(world, x, y, "dynamic")
     jammer.body:setAngle(angle)
+    local linearVelocityX = config.linearVelocityX or 0
+    local linearVelocityY = config.linearVelocityY or 0
+    jammer.body:setLinearVelocity(linearVelocityX, linearVelocityY)
+    local angularVelocity = config.angularVelocity or 0
+    jammer.body:setAngularVelocity(angularVelocity)
     local shape = love.physics.newCircleShape(0.5)
     jammer.fixture = love.physics.newFixture(jammer.body, shape)
 
