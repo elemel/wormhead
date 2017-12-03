@@ -32,6 +32,11 @@ function utils.count(t)
     return count
 end
 
+function utils.normalize2(x, y)
+    local length = utils.length2(x, y)
+    return x / length, y / length, length
+end
+
 function utils.generatePolygon(vertexCount, x, y, scaleX, scaleY, irregularity, random)
     vertexCount = vertexCount or 8
     x = x or 0

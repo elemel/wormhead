@@ -32,10 +32,21 @@ function Asteroid.new(game, config)
         userType = "asteroid",
     })
 
+    asteroid.turrets = {}
     return asteroid
 end
 
 function Asteroid:destroy()
+    while true do
+        local turret = next(self.turrets)
+
+        if not turret then
+            break
+        end
+
+        turret:destroy()
+    end
+
     self.fixture:destroy()
     self.body:destroy()
     self.game.drawHandlers[self] = nil

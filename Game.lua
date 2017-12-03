@@ -1,4 +1,5 @@
 local Camera = require("Camera")
+local FontCache = require("FontCache")
 local Physics = require("Physics")
 local Level = require("Level")
 
@@ -7,7 +8,7 @@ Game.__index = Game
 
 function Game.new()
     local game = setmetatable({}, Game)
-    game.camera = Camera.new({scale = 1 / 64})
+    game.camera = Camera.new({scale = 3 / 128})
     game.resources = {}
     game.resources.images = {}
     game.resources.images.armedMine = love.graphics.newImage("resources/images/armed-mine.png")
@@ -15,11 +16,19 @@ function Game.new()
     game.resources.images.jammer = love.graphics.newImage("resources/images/jammer.png")
     game.resources.images.pixel = love.graphics.newImage("resources/images/pixel.png")
     game.resources.images.stars = love.graphics.newImage("resources/images/stars.png")
+    game.resources.images.turret = love.graphics.newImage("resources/images/turret.png")
     game.resources.images.wormhead = love.graphics.newImage("resources/images/wormhead.png")
+    game.resources.music = {}
+    game.resources.music.wormhead = love.audio.newSource("resources/music/wormhead.ogg")
+    game.music = game.resources.music.wormhead:clone()
+    game.music:setLooping(true)
+    game.music:play()
+    game.fontCache = FontCache.new()
     game.updateHandlers = {}
     game.collideHandlers = {}
     game.animateHandlers = {}
     game.drawHandlers = {}
+    game.drawHudHandlers = {}
     game.entities = {}
     game.entities.asteroid = {}
     game.entities.jammer = {}
@@ -64,6 +73,13 @@ function Game:draw()
     end
 
     -- self.physics:draw()
+
+    love.graphics.reset()
+    love.graphics.setLineWidth(1)
+
+    for entity, handler in pairs(self.drawHudHandlers) do
+        handler(entity)
+    end
 end
 
 function Game:drawParallaxStars(parallaxScale, scaleX, scaleY)
@@ -85,7 +101,6 @@ function Game:drawParallaxStars(parallaxScale, scaleX, scaleY)
                 128, 128)
         end
     end
-
 end
 
 return Game
