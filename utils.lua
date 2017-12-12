@@ -22,6 +22,11 @@ function utils.generateDirection(random)
     return math.cos(angle), math.sin(angle)
 end
 
+function utils.generateSign(random)
+    random = random or love.math.random
+    return 2 * random(0, 1) - 1
+end
+
 function utils.count(t)
     local count = 0
 

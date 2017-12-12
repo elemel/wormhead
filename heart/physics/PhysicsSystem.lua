@@ -1,5 +1,6 @@
 local PhysicsSystem = {}
 PhysicsSystem.__index = PhysicsSystem
+PhysicsSystem.objectType = "system"
 PhysicsSystem.systemType = "physics"
 
 function PhysicsSystem.new(game, config)

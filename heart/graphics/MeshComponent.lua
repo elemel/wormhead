@@ -10,7 +10,6 @@ function MeshComponent.new(entity, config)
     component.graphicsSystem = assert(component.entity.game.systems.graphics)
     component.graphicsSystem.meshComponents[component] = true
     component.transformComponent = assert(entity:getAncestorComponent("transform"))
-    component.meshName = assert(config.meshName)
     return component
 end
 

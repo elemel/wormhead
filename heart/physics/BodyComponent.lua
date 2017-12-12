@@ -21,6 +21,11 @@ function BodyComponent.new(entity, config)
     component.body:setAngle(angle)
     local fixedRotation = config.fixedRotation or false
     component.body:setFixedRotation(fixedRotation)
+    local linearVelocityX = config.linearVelocityX or 0
+    local linearVelocityY = config.linearVelocityY or 0
+    component.body:setLinearVelocity(linearVelocityX, linearVelocityY)
+    local angularVelocity = config.angularVelocity or 0
+    component.body:setAngularVelocity(angularVelocity)
     return component
 end
 

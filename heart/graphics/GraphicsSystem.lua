@@ -44,57 +44,38 @@ function GraphicsSystem:updateGraphics(dt)
 end
 
 function GraphicsSystem:drawGraphics()
-    for component, _ in pairs(self.cameraComponents) do
+    for cameraComponent, _ in pairs(self.cameraComponents) do
         love.graphics.reset()
 
         love.graphics.setScissor(
-            component.viewportX, component.viewportY,
-            component.viewportWidth, component.viewportHeight)
+            cameraComponent.viewportX, cameraComponent.viewportY,
+            cameraComponent.viewportWidth, cameraComponent.viewportHeight)
 
         love.graphics.translate(
-            component.viewportX + 0.5 * component.viewportWidth,
-            component.viewportY + 0.5 * component.viewportHeight)
+            cameraComponent.viewportX + 0.5 * cameraComponent.viewportWidth,
+            cameraComponent.viewportY + 0.5 * cameraComponent.viewportHeight)
 
-        component.transformComponent:setDirty(false)
+        cameraComponent.transformComponent:setDirty(false)
 
         local x, y, angle, scaleX, scaleY, originX, originY, shearX, shearY =
-            component.transformComponent.worldTransform:decompose()
+            cameraComponent.transformComponent.worldTransform:decompose()
 
-        local scale = scaleX * math.min(component.viewportWidth, component.viewportHeight)
+        local scale = scaleX * math.min(cameraComponent.viewportWidth, cameraComponent.viewportHeight)
 
         love.graphics.scale(scale)
         love.graphics.setLineWidth(1 / scale)
         love.graphics.translate(-x, -y)
 
-        for component, _ in pairs(self.meshComponents) do
-            component.transformComponent:setDirty(false)
-
-            love.graphics.setShader(self.game.shaders.default)
-
-            self.game.shaders.default:send("inverseBindPoseTransforms", {
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1,
-            })
-
-            local transform = component.transformComponent.worldTransform
-
-            self.game.shaders.default:send("boneTransforms", {
-                transform.a, transform.d, 0, 0,
-                transform.b, transform.e, 0, 0,
-                0, 0, 1, 0,
-                transform.c, transform.f, 0, 1,
-            })
-
-            local mesh = assert(self.game.meshes[component.meshName])
-            love.graphics.draw(mesh)
-            love.graphics.setShader(nil)
+        for meshComponent, _ in pairs(self.meshComponents) do
+            if meshComponent.mesh then
+                meshComponent.transformComponent:setDirty(false)
+                love.graphics.draw(meshComponent.mesh, meshComponent.transformComponent.worldTransform:decompose())
+            end
         end
 
-        for component, _ in pairs(self.particleSystemComponents) do
+        for particleSystemComponent, _ in pairs(self.particleSystemComponents) do
             love.graphics.setBlendMode("add")
-            love.graphics.draw(component.particles)
+            love.graphics.draw(particleSystemComponent.particles)
             love.graphics.setBlendMode("alpha")
         end
 

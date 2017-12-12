@@ -128,21 +128,19 @@ function Entity:getAncestorComponent(name, minDistance, maxDistance)
     return nil
 end
 
-function Entity:getDescendantComponent(componentType, minDistance, maxDistance)
+function Entity:getDescendantComponent(name, minDistance, maxDistance)
     local first = nil
 
     function callback(component)
-        print(component)
         first = component
         return false
     end
 
-    self:getDescendantComponents(componentType, callback, minDistance, maxDistance)
+    self:getDescendantComponents(name, callback, minDistance, maxDistance)
     return first
 end
 
-function Entity:getDescendantComponents(componentType, callback, minDistance, maxDistance)
-    print(componentType, minDistance, maxDistance)
+function Entity:getDescendantComponents(name, callback, minDistance, maxDistance)
     minDistance = minDistance or 0
     maxDistance = maxDistance or math.huge
 
@@ -151,7 +149,7 @@ function Entity:getDescendantComponents(componentType, callback, minDistance, ma
     end
 
     if minDistance <= 0 then
-        local component = self.components[componentType]
+        local component = self.components[name]
 
         if component and not callback(component) then
             return false
@@ -159,7 +157,7 @@ function Entity:getDescendantComponents(componentType, callback, minDistance, ma
     end
 
     for i, child in ipairs(self.children) do
-        if not child:getDescendantComponents(componentType, callback, minDistance - 1, maxDistance - 1) then
+        if not child:getDescendantComponents(name, callback, minDistance - 1, maxDistance - 1) then
             return false
         end
     end

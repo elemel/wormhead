@@ -27,31 +27,29 @@ function loadHeart()
     local graphicsSystem = heart.graphics.newGraphicsSystem(game, {})
     local physicsSystem = heart.physics.newPhysicsSystem(game, {})
     local scriptingSystem = heart.scripting.newScriptingSystem(game, {})
+
+    scriptingSystem.environment.assert = assert
+    scriptingSystem.environment.getmetatable = getmetatable
     scriptingSystem.environment.heart = heart
+    scriptingSystem.environment.ipairs = ipairs
     scriptingSystem.environment.love = love
+    scriptingSystem.environment.math = math
+    scriptingSystem.environment.next = next
+    scriptingSystem.environment.pairs = pairs
+    scriptingSystem.environment.print = print
+    scriptingSystem.environment.setmetatable = setmetatable
+    scriptingSystem.environment.table = table
 
     game.componentCreators.body = assert(heart.physics.newBodyComponent)
     game.componentCreators.camera = assert(heart.graphics.newCameraComponent)
     game.componentCreators.circleFixture = assert(heart.physics.newCircleFixtureComponent)
     game.componentCreators.mesh = assert(heart.graphics.newMeshComponent)
     game.componentCreators.particleSystem = assert(heart.graphics.newParticleSystemComponent)
+    game.componentCreators.polygonFixture = assert(heart.physics.newPolygonFixtureComponent)
     game.componentCreators.rectangleFixture = assert(heart.physics.newRectangleFixtureComponent)
     game.componentCreators.script = assert(heart.scripting.newScriptComponent)
     game.componentCreators.transform = assert(heart.animation.newTransformComponent)
     game.componentCreators.wheelJoint = assert(heart.physics.newWheelJointComponent)
-
-    heart.game.newEntity(game, nil, {
-        components = {
-            {
-                componentType = "transform",
-                scale = 1 / 16,
-            },
-
-            {
-                componentType = "camera",
-            },
-        },
-    })
 
     heart.game.newEntity(game, nil, {
         components = {
@@ -68,6 +66,21 @@ function loadHeart()
 
         children = {
             {
+                name = "camera",
+
+                components = {
+                    {
+                        componentType = "transform",
+                        scale = 1 / 256,
+                    },
+
+                    {
+                        componentType = "camera",
+                    },
+                },
+            },
+
+            {
                 name = "asteroids",
             },
         },
@@ -83,4 +96,8 @@ end
 
 function love.draw()
     game:draw()
+end
+
+function love.resize(width, height)
+    game:callback("resize", width, height)
 end

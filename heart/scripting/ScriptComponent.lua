@@ -11,8 +11,8 @@ function ScriptComponent.new(entity, config)
     component.scriptingSystem = assert(component.entity.game.systems.scripting)
     component.scriptingSystem:addScriptComponent(component)
     component.scriptFilename = assert(config.scriptFilename)
-    local scriptClass = component.scriptingSystem:loadScriptClass(component.scriptFilename)
-    component.script = scriptClass.new(component)
+    local scriptClass = component.scriptingSystem:loadScript(component.scriptFilename)
+    component.script = scriptClass.new(component, config.script or {})
     component.scriptingSystem.scriptUpdateHandlers[component] = component.script.update
     return component
 end

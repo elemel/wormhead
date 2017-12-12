@@ -7,16 +7,13 @@ function ScriptingSystem.new(game, config)
     system.game = assert(game)
     system.game.systems.scripting = system
     system.scriptComponents = {}
-    system.scriptClasses = {}
+    system.scripts = {}
     system.scriptUpdateHandlers = {}
 
     system.environment = {
-        assert = assert,
-        getmetatable = getmetatable,
-        math = math,
-        next = next,
-        print = print,
-        setmetatable = setmetatable,
+        require = function(filename)
+            return system:loadScript(filename .. ".lua")
+        end,
     }
 
     system.environment.__index = system.environment
@@ -43,19 +40,19 @@ function ScriptingSystem:update(dt)
     end
 end
 
-function ScriptingSystem:loadScriptClass(filename)
-    local scriptClass = self.scriptClasses[filename]
+function ScriptingSystem:loadScript(filename)
+    local script = self.scripts[filename]
 
-    if not scriptClass then
+    if not script then
         local scriptFunction = assert(loadfile(filename, "t"))
         local scriptEnvironment = {}
         setmetatable(scriptEnvironment, self.environment)
         setfenv(scriptFunction, scriptEnvironment)
-        scriptClass = scriptFunction()
-        self.scriptClasses[filename] = scriptClass
+        script = scriptFunction()
+        self.scripts[filename] = scripts
     end
 
-    return scriptClass
+    return script
 end
 
 return ScriptingSystem
