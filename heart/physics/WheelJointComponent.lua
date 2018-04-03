@@ -1,7 +1,6 @@
 local WheelJointComponent = {}
 WheelJointComponent.__index = WheelJointComponent
 WheelJointComponent.componentType = "wheelJoint"
-WheelJointComponent.componentName = "joint"
 
 function WheelJointComponent.new(entity, config)
     local component = setmetatable({}, WheelJointComponent)

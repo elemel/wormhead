@@ -40,6 +40,17 @@ function loadHeart()
     scriptingSystem.environment.setmetatable = setmetatable
     scriptingSystem.environment.table = table
 
+    table.insert(game.componentTypes, "transform")
+    table.insert(game.componentTypes, "body")
+    table.insert(game.componentTypes, "circleFixture")
+    table.insert(game.componentTypes, "polygonFixture")
+    table.insert(game.componentTypes, "rectangleFixture")
+    table.insert(game.componentTypes, "wheelJoint")
+    table.insert(game.componentTypes, "mesh")
+    table.insert(game.componentTypes, "particleSystem")
+    table.insert(game.componentTypes, "camera")
+    table.insert(game.componentTypes, "script")
+
     game.componentCreators.body = assert(heart.physics.newBodyComponent)
     game.componentCreators.camera = assert(heart.graphics.newCameraComponent)
     game.componentCreators.circleFixture = assert(heart.physics.newCircleFixtureComponent)
@@ -53,13 +64,9 @@ function loadHeart()
 
     heart.game.newEntity(game, nil, {
         components = {
-            {
-                componentType = "transform",
-            },
+            transform = {},
 
-            {
-                componentType = "script",
-                name = "levelScript",
+            script = {
                 scriptFilename = "resources/scripts/Level.lua",
             },
         },
@@ -69,14 +76,11 @@ function loadHeart()
                 name = "camera",
 
                 components = {
-                    {
-                        componentType = "transform",
-                        scale = 1 / 256,
+                    transform = {
+                        scale = 1 / 16,
                     },
 
-                    {
-                        componentType = "camera",
-                    },
+                    camera = {},
                 },
             },
 

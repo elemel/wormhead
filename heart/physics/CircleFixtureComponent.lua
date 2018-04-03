@@ -2,7 +2,6 @@ local CircleFixtureComponent = {}
 CircleFixtureComponent.__index = CircleFixtureComponent
 CircleFixtureComponent.objectType = "component"
 CircleFixtureComponent.componentType = "circleFixture"
-CircleFixtureComponent.componentName = "fixture"
 
 function CircleFixtureComponent.new(entity, config)
     local component = setmetatable({}, CircleFixtureComponent)

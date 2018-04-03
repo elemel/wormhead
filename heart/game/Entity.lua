@@ -14,10 +14,13 @@ function Entity.new(game, parent, config)
     entity.components = {}
 
     if config.components then
-        for i, componentConfig in ipairs(config.components) do
-            local componentType = assert(componentConfig.componentType)
-            local componentCreator = assert(game.componentCreators[componentType])
-            componentCreator(entity, componentConfig)
+        for i, componentType in ipairs(entity.game.componentTypes) do
+            local componentConfig = config.components[componentType]
+
+            if componentConfig then
+                local componentCreator = assert(entity.game.componentCreators[componentType])
+                componentCreator(entity, componentConfig)
+            end
         end
     end
 
@@ -29,8 +32,10 @@ function Entity.new(game, parent, config)
         end
     end
 
-    for i, component in ipairs(entity.components) do
-        if component.start then
+    for i, componentType in ipairs(entity.game.componentTypes) do
+        local component = entity.components[componentType]
+
+        if component and component.start then
             component:start()
         end
     end
@@ -39,8 +44,9 @@ function Entity.new(game, parent, config)
 end
 
 function Entity:destroy()
-    for i = #self.components, 1, -1 do
-        local component = self.components[i]
+    for i = #self.game.componentTypes, 1, -1 do
+        local componentType = self.game.componentTypes[i]
+        local component = self.components[componentType]
 
         if component and component.stop then
             component:stop()
@@ -55,8 +61,9 @@ function Entity:destroy()
         end
     end
 
-    for i = #self.components, 1, -1 do
-        local component = self.components[i]
+    for i = #self.game.componentTypes, 1, -1 do
+        local componentType = self.game.componentTypes[i]
+        local component = self.components[componentType]
 
         if component and component.destroy then
             component:destroy()
@@ -94,19 +101,17 @@ end
 function Entity:addComponent(component)
     assert(component.objectType == "component")
     table.insert(self.components, component)
-    local name = assert(component.name or component.componentType)
-    self.components[name] = component
+    self.components[component.componentType] = component
 end    
 
 function Entity:removeComponent(component)
     assert(component.objectType == "component")
-    local name = assert(component.name or component.componentType)
-    self.components[name] = nil
+    self.components[component.componentType] = nil
     local i = assert(utils.lastIndex(self.components, component))
     table.remove(self.components, i)
 end
 
-function Entity:getAncestorComponent(name, minDistance, maxDistance)
+function Entity:getAncestorComponent(componentType, minDistance, maxDistance)
     minDistance = minDistance or 0
     maxDistance = maxDistance or math.huge
     local entity = self
@@ -114,7 +119,7 @@ function Entity:getAncestorComponent(name, minDistance, maxDistance)
 
     while entity do
         if minDistance <= distance and distance <= maxDistance then
-            local component = entity.components[name]
+            local component = entity.components[componentType]
 
             if component then
                 return component
@@ -128,7 +133,7 @@ function Entity:getAncestorComponent(name, minDistance, maxDistance)
     return nil
 end
 
-function Entity:getDescendantComponent(name, minDistance, maxDistance)
+function Entity:getDescendantComponent(componentType, minDistance, maxDistance)
     local first = nil
 
     function callback(component)
@@ -136,11 +141,11 @@ function Entity:getDescendantComponent(name, minDistance, maxDistance)
         return false
     end
 
-    self:getDescendantComponents(name, callback, minDistance, maxDistance)
+    self:getDescendantComponents(componentType, callback, minDistance, maxDistance)
     return first
 end
 
-function Entity:getDescendantComponents(name, callback, minDistance, maxDistance)
+function Entity:getDescendantComponents(componentType, callback, minDistance, maxDistance)
     minDistance = minDistance or 0
     maxDistance = maxDistance or math.huge
 
@@ -149,7 +154,7 @@ function Entity:getDescendantComponents(name, callback, minDistance, maxDistance
     end
 
     if minDistance <= 0 then
-        local component = self.components[name]
+        local component = self.components[componentType]
 
         if component and not callback(component) then
             return false
@@ -157,7 +162,7 @@ function Entity:getDescendantComponents(name, callback, minDistance, maxDistance
     end
 
     for i, child in ipairs(self.children) do
-        if not child:getDescendantComponents(name, callback, minDistance - 1, maxDistance - 1) then
+        if not child:getDescendantComponents(componentType, callback, minDistance - 1, maxDistance - 1) then
             return false
         end
     end

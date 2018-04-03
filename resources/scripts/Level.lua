@@ -65,29 +65,24 @@ function Level:generateAsteroid()
 
     local entity = heart.game.newEntity(self.component.entity.game, asteroidsEntity, {
         components = {
-            {
-                componentType = "transform",
+            transform = {
                 x = x,
                 y = y,
                 angle = angle,
             },
 
-            {
-                componentType = "body",
+            body = {
                 bodyType = "dynamic",
                 linearVelocityX = linearVelocityX,
                 linearVelocityY = linearVelocityY,
                 angularVelocity = angularVelocity,
             },
 
-            {
-                componentType = "polygonFixture",
+            polygonFixture = {
                 vertices = vertices,
             },
 
-            {
-                componentType = "mesh",
-            },
+            mesh = {},
         },
     })
 

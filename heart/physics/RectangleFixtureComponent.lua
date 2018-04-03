@@ -2,7 +2,6 @@ local RectangleFixtureComponent = {}
 RectangleFixtureComponent.__index = RectangleFixtureComponent
 RectangleFixtureComponent.objectType = "component"
 RectangleFixtureComponent.componentType = "rectangleFixture"
-RectangleFixtureComponent.componentName = "fixture"
 
 function RectangleFixtureComponent.new(entity, config)
     local component = setmetatable({}, RectangleFixtureComponent)

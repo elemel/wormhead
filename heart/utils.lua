@@ -10,6 +10,26 @@ function utils.key(t, v)
     return nil
 end
 
+function utils.keys(t)
+    local keys = {}
+
+    for k, v in pairs(t) do
+        table.insert(keys, k)
+    end
+
+    return keys
+end
+
+function utils.values(t)
+    local values = {}
+
+    for k, v in pairs(t) do
+        table.insert(values, v)
+    end
+
+    return values
+end
+
 function utils.index(t, v)
     for i, value in ipairs(t) do
         if value == v then

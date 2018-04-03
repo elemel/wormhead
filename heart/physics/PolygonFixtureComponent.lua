@@ -2,7 +2,6 @@ local PolygonFixtureComponent = {}
 PolygonFixtureComponent.__index = PolygonFixtureComponent
 PolygonFixtureComponent.objectType = "component"
 PolygonFixtureComponent.componentType = "polygonFixture"
-PolygonFixtureComponent.componentName = "fixture"
 
 function PolygonFixtureComponent.new(entity, config)
     local component = setmetatable({}, PolygonFixtureComponent)

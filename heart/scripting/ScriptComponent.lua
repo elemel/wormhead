@@ -5,7 +5,6 @@ ScriptComponent.componentType = "script"
 
 function ScriptComponent.new(entity, config)
     local component = setmetatable({}, ScriptComponent)
-    component.name = config.name
     component.entity = assert(entity)
     component.entity:addComponent(component)
     component.scriptingSystem = assert(component.entity.game.systems.scripting)

@@ -14,6 +14,7 @@ function Game.new(config)
     game.skeletons = {}
     game.shaders = {}
     game.componentCreators = {}
+    game.componentTypes = {}
     game.callbackHandlers = {}
     game.callbackHandlers.resize = {}
 
